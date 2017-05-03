@@ -18,16 +18,14 @@ docker build -t nginx_php_mysql:v3 .
 ```
 docker run -itv /blog1:/user/share/nginx/html --add-host sfc5.com:192.168.99.100 -p 9999:80 -p 3306:3306 --privileged --name php_nginx_5 [镜像id]
 ```
+系统用supervisor进程管理，启动nginx+php-fpm+mysql
 
 进入容器
 ```
 docker exec -it [容器id] bash
 ```
-开启mysql服务
-```
-service mysql start
-```
 mysql默认账号root、密码root
 
-### 第四部访问站点
+### 第四步
+访问站点
 sfc5.com/192.168.99.100:9999
