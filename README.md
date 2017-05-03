@@ -16,7 +16,7 @@ docker build -t nginx_php_mysql:v3 .
 ### 第三步
 创建容器
 ```
-docker run -itv /blog1:/user/share/nginx/html --add-host sfc5.com:192.168.99.100 -p 9999:80 -p 3306:3306 --privileged --name php_nginx_5 [镜像id]
+docker run -itv /blog1:/usr/share/nginx/html --add-host sfc5.com:192.168.99.100 -p 9999:80 -p 3306:3306 --privileged --name php_nginx_5 [镜像id]
 ```
 系统用supervisor进程管理，启动nginx+php-fpm+mysql
 
