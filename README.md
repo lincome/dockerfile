@@ -1,31 +1,38 @@
-# dockerfile_php_nginx_mysql
-docker环境php7、nginx1、mysql5.5
+# env
+php:5.6.31-apache
 
-### 第一步
-从阿里云拉取镜像
+### One
+
 ```
-docker pull registry.cn-hangzhou.aliyuncs.com/linqr/php_nginx_mysql:v5
+FROM php:5.6.31-apache
+COPY docker/php.ini /usr/local/etc/php/
+RUN apt-get update && apt-get install -y \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libmcrypt-dev \
+        libpng12-dev \
+    && docker-php-ext-install -j$(nproc) iconv mcrypt \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) gd
+RUN pecl install redis-3.1.0 \
+    && pecl install xdebug-2.5.0 \
+    && docker-php-ext-enable redis xdebug
+RUN docker-php-ext-install mysql
 ```
 
-### 第二步
+### Two
 通过dockerfile重建你需要的环境镜像
 ```
-docker build -t nginx_php_mysql:v3 .
+docker build -t php_apache:v1 .
 ```
 
-### 第三步
+### Three
 创建容器
 ```
 docker run -itv /blog1:/usr/share/nginx/html --add-host sfc5.com:192.168.99.100 -p 9999:80 -p 3306:3306 --privileged --name php_nginx_5 [镜像id]
 ```
-系统自动用supervisor进程管理，启动nginx、php-fpm、mysql
 
 进入容器
 ```
 docker exec -it [容器id] bash
 ```
-mysql默认账号root、密码root
-
-### 第四步
-访问站点
-sfc5.com/192.168.99.100:9999
